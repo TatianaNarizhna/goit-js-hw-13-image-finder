@@ -1,15 +1,31 @@
 
-import ApiImages from "./apiService.js";
+import SearchIpiImages from "./apiService.js";
 import imgCard from '../templates/img-card.hbs';
 
 const refs = {
-    input:document.querySelector('.input-search'),
-    galleryList:document.querySelector('.gallery'),
+    input:document.querySelector('#search-form'),
+    galleryList:document.querySelector('.gallery-container'),
+    loadMoreBtm:document.querySelector('[data-action="load-more"]'),
 }
 
-refs.input.addEventListener('input', onInputImg);
+const searchIpiImages = new SearchIpiImages();
+
+refs.input.addEventListener('submit', onInputImg);
+refs.loadMoreBtm.addEventListener('click', onLoadMore);
+
 
 function onInputImg(e) {
-    let searchQuery = e.target.elements.query.value;
-    // const imgFindTrim = searchQuery.trim();
+    e.preventDefault();
+
+    searchIpiImages.query = e.currentTarget.elements.query.value;
+    searchIpiImages.resetPage();
+    searchIpiImages.fetchImgSearch();
+    
 }
+
+function onLoadMore() {
+    
+    searchIpiImages.fetchImgSearch();
+}
+
+
