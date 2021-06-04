@@ -1,3 +1,6 @@
+import { error } from '@pnotify/core';
+import '@pnotify/core/dist/BrightTheme.css';
+import '@pnotify/core/dist/PNotify.css';
 
 import imgCard from '../templates/img-card.hbs';
 import SearchIpiImages from "./apiService.js";
@@ -26,14 +29,16 @@ function onSearchImg(e) {
     searchIpiImages.query = e.currentTarget.elements.query.value;
     const searchImgTrim = searchIpiImages.query.trim();
 
-    // if (searchIpiImages.query === '') {
-    //     clearImgMarkUp();
-    // }
+    if (searchImgTrim === '') {
+        loadButton.disableBtn();
+        return noSearchWord();
+    }
 
     loadButton.show();
     searchIpiImages.resetPage();
     clearImgMarkUp();
     fetchImages(); 
+
 }
 
 function fetchImages() {
@@ -41,6 +46,12 @@ function fetchImages() {
     searchIpiImages.fetchImgSearch().then(hits => {
         imagesMarkUp(hits);
         loadButton.enableBtn();
+        smoothScrolling();
+
+        if(hits.length === 0) {
+            loadButton.hide();
+            onError();
+        }
     });
 }
 
@@ -50,6 +61,31 @@ function imagesMarkUp(hits) {
 
 function clearImgMarkUp() {
     refs.galleryList.innerHTML = '';
+}
+
+function smoothScrolling() {
+    try {
+        refs.galleryList.scrollIntoView({
+            behavior: 'smooth',
+            block: 'end',
+        })  
+         } catch (onError) {
+        console.log(onError);
+     }
+};
+
+function onError() {
+    error({
+        text: 'Try Again!',
+        delay: 2000,
+    });
+}
+
+function noSearchWord() {
+    error({
+        text: 'Please enter the search key',
+        delay: 2000,
+    });
 }
 
 
