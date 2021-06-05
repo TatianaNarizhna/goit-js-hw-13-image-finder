@@ -5,6 +5,7 @@ import '@pnotify/core/dist/PNotify.css';
 import imgCard from '../templates/img-card.hbs';
 import SearchIpiImages from "./apiService.js";
 import LoadButton from "./load-more-btn.js";
+import { onImgClick } from './lightbox';
 
 const refs = {
     input:document.querySelector('#search-form'),
@@ -22,6 +23,7 @@ const searchIpiImages = new SearchIpiImages();
 
 refs.input.addEventListener('submit', onSearchImg);
 loadButton.refs.button.addEventListener('click', fetchImages);
+refs.galleryList.addEventListener('click', onImgClick);
 
 function onSearchImg(e) {
     e.preventDefault();
@@ -38,7 +40,6 @@ function onSearchImg(e) {
     searchIpiImages.resetPage();
     clearImgMarkUp();
     fetchImages(); 
-
 }
 
 function fetchImages() {
@@ -69,7 +70,7 @@ function smoothScrolling() {
             behavior: 'smooth',
             block: 'end',
         })  
-         } catch (onError) {
+         } catch {
         console.log(onError);
      }
 };
@@ -87,5 +88,6 @@ function noSearchWord() {
         delay: 2000,
     });
 }
+
 
 
